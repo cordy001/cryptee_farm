@@ -11,8 +11,8 @@ export default function Home() {
       const Scene = createScene(Phaser);
       const config = {
         type: Phaser.AUTO,
-        width: innerWidth / 2,
-        height: "100%",
+        width: "1200px",
+        height: "800px",
         parent: gameRef.current,
         backgroundColor: "#fff",
         scene: Scene,
