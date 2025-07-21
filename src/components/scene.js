@@ -7,7 +7,7 @@ export default function createScene(Phaser) {
     }
     
     preload() {
-      this.load.spritesheet("player_walk", "/walk.png", {
+      this.load.spritesheet("player_walk", "/walk2.png", {
         frameWidth: 32,
         frameHeight: 32
       });
