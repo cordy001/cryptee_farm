@@ -7,34 +7,45 @@ export default function Home() {
 
   useEffect(() => {
     let game;
+    const handleResize = () => {
+      if (game) {
+        game.scale.resize(window.innerWidth, window.innerHeight);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+
     import("phaser").then(Phaser => {
       const Scene = createScene(Phaser);
       const config = {
         type: Phaser.AUTO,
-        width: "1200px",
-        height: "800px",
         parent: gameRef.current,
         backgroundColor: "#fff",
         scene: Scene,
+        pixelArt: true,
+        width: window.innerWidth,               // ← full window width
+        height: window.innerHeight,             // ← full window height
         scale: {
-          mode: Phaser.Scale.FIT,
+          mode: Phaser.Scale.RESIZE,            // ← resize canvas to fill
           autoCenter: Phaser.Scale.CENTER_BOTH,
         },
-        pixelArt: true,
+        physics: {
+          default: "arcade",
+          arcade: { gravity: { y: 0 }, debug: false }
+        }
       };
       game = new Phaser.Game(config);
+      handleResize(); // in case the initial CSS container is smaller
     });
 
     return () => {
-      if (game) {
-        game.destroy(true);
-      }
+      window.removeEventListener("resize", handleResize);
+      if (game) game.destroy(true);
     };
   }, []);
 
   return (
     <div className="container">
-      <div ref={gameRef} />
+      <div ref={gameRef} style={{ width: "100vw", height: "100vh" }} />
     </div>
   );
 }

@@ -7,26 +7,28 @@ export default function createScene(Phaser) {
     }
     
     preload() {
-      this.load.spritesheet("player_walk", "/walk2.png", {
+      this.load.spritesheet("player_walk", "/Character/char_1/walk_ch1.png", {
         frameWidth: 32,
         frameHeight: 32
       });
-      this.load.spritesheet("player_idle", "/idle.png", {
+      this.load.spritesheet("player_idle", "/Character/char_1/idle_ch1.png", {
         frameWidth: 32,
         frameHeight: 32 
       })
-      this.load.spritesheet("player_idle2", "/idle2.png", {
+      this.load.spritesheet("player_idle2", "/Character/char_1/idle2_ch1.png", {
         frameWidth: 32,
         frameHeight: 32 
       })
-      this.load.spritesheet("player_walk_front", "/walk_front.png", {
+      this.load.spritesheet("player_walk_front", "/Character/char_1/walk_front_ch1.png", {
         frameWidth: 32,
         frameHeight: 32 
       });
-      this.load.spritesheet("player_walk_back", "/walk_back.png", {
+      this.load.spritesheet("player_walk_back", "/Character/char_1/walk_back_ch1.png", {
         frameWidth: 32,
         frameHeight: 32 
       });
+      this.load.tilemapTiledJSON('map', '/Map/map.json');
+      this.load.image('tiles', '/Map/tilemap_packed.png');
     }
     
     create() {
@@ -37,6 +39,33 @@ export default function createScene(Phaser) {
         frameRate: 10,
         repeat: -1 // Loop forever
       });
+
+      // 1) Build the map & layers
+      const map = this.make.tilemap({ key: 'map' });
+      const tileset = map.addTilesetImage('Cryptee Farm', 'tiles');
+      map.createLayer('ground', tileset, 0, 0);
+
+      // Create the Tree layer and enable tile collision by property
+      const treeLayer  = map.createLayer('Tree',  tileset, 0, 0)
+      .setCollisionByExclusion([-1]);
+
+      // new fence layer
+      const fenceLayer = map.createLayer('fence', tileset, 0, 0)
+      .setCollisionByExclusion([-1]);
+
+      // 2) Create the player as a physics sprite
+      this.player = this.physics.add.sprite(100,300,'player_idle')
+        .setOrigin(0.5)
+        .setCollideWorldBounds(true);
+
+      // shrink the arcade‐body to be narrower/taller
+      this.player.body.setSize(16, 28);
+      // re‐center it in the sprite
+      this.player.body.setOffset((32-16)/2, (32-28));
+
+      // **colliders for both layers**
+      this.physics.add.collider(this.player, treeLayer);
+      this.physics.add.collider(this.player, fenceLayer);
 
       this.anims.create({
         key: "walk_front",
@@ -67,58 +96,44 @@ export default function createScene(Phaser) {
         repeat: -1 // Loop forever
       });
 
-      // Add player sprite
-      this.player = this.add.sprite(400, 300, "player_idle").setOrigin(0.5, 0.5);
-      this.player.anims.play("idle");
-      this.player.setScale(5);
+      // 4) Camera
+      this.cameras.main
+        .startFollow(this.player)
+        .setZoom(4)
+        .setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
-      // Add keyboard input
+      // 5) Input & speed
       this.cursors = this.input.keyboard.createCursorKeys();
-      this.speed = 5;
+      this.speed = 200;
     }
     update() {
-      if (!this.player || !this.cursors) return;
-
-      let moving = false;
-
-      // Track last direction
-      if (!this.lastDirection) this.lastDirection = "down";
+      const body = this.player.body;
+      body.setVelocity(0, 0);
 
       if (this.cursors.left.isDown) {
-        this.player.x -= this.speed;
-        this.player.anims.play("walk", true);
+        body.setVelocityX(-this.speed);
+        this.player.anims.play('walk', true);
         this.player.flipX = true;
-        this.lastDirection = "left";
-        moving = true;
-      } else if (this.cursors.right.isDown) {
-        this.player.x += this.speed;
-        this.player.anims.play("walk", true);
+      }
+      else if (this.cursors.right.isDown) {
+        body.setVelocityX(this.speed);
+        this.player.anims.play('walk', true);
         this.player.flipX = false;
-        this.lastDirection = "right";
-        moving = true;
-      } else if (this.cursors.up.isDown) {
-        this.player.y -= this.speed;
-        this.player.anims.play("walk_back", true);
-        this.lastDirection = "up";
-        this.player.flipX = true
-        moving = true;
-      } else if (this.cursors.down.isDown) {
-        this.player.y += this.speed;
-        this.player.anims.play("walk_front", true);
-        this.lastDirection = "down";
-        this.player.flipX = false
-        moving = true;
+      }
+      else if (this.cursors.up.isDown) {
+        body.setVelocityY(-this.speed);
+        this.player.anims.play('walk_back', true);
+      }
+      else if (this.cursors.down.isDown) {
+        body.setVelocityY(this.speed);
+        this.player.anims.play('walk_front', true);
       }
 
-      // Play idle animation based on last direction
-      if (!moving) {
-        if (this.lastDirection === "left" || this.lastDirection === "right") {
-          this.player.anims.play("idle2", true);
-          this.player.flipX = this.lastDirection === "left";
-        } else {
-          this.player.anims.play("idle", true);
-          this.player.flipX = false;
-        }
+      // normalize diagonal speed
+      body.velocity.normalize().scale(this.speed);
+
+      if (body.velocity.x === 0 && body.velocity.y === 0) {
+        this.player.anims.play('idle', true);
       }
     } 
   };
