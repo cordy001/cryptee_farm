@@ -20,6 +20,10 @@ export default function createScene(Phaser) {
         frameWidth: 32,
         frameHeight: 32 
       })
+      this.load.spritesheet("player_idle3", "/Character/char_1/idle3_ch1.png", {
+        frameWidth: 32,
+        frameHeight: 32
+      })
       this.load.spritesheet("player_walk_front", "/Character/char_1/walk_front_ch1.png", {
         frameWidth: 32,
         frameHeight: 32 
@@ -100,15 +104,22 @@ export default function createScene(Phaser) {
         key: "idle",
         frames: this.anims.generateFrameNumbers("player_idle", { start: 0, end: 3 }),
         frameRate: 10,
-        repeat: -1 // Loop forever
+        repeat: -1
       });
 
        this.anims.create({
         key: "idle2",
         frames: this.anims.generateFrameNumbers("player_idle2", { start: 0, end: 3 }),
         frameRate: 10,
-        repeat: -1 // Loop forever
+        repeat: -1 
       });
+
+      this.anims.create({
+        key: "idle3",
+        frames: this.anims.generateFrameNumbers("player_idle3", { start: 0, end: 3 }),
+        frameRate: 10,
+        repeat: -1
+      })
 
       // 4) Camera
       this.cameras.main
@@ -139,7 +150,7 @@ export default function createScene(Phaser) {
       else if (this.cursors.up.isDown) {
         body.setVelocityY(-this.speed);
         this.player.anims.play('walk_back', true);
-        this.lastDirections = 'front';
+        this.lastDirections = 'back';
       }
       else if (this.cursors.down.isDown) {
         body.setVelocityY(this.speed);
@@ -152,6 +163,9 @@ export default function createScene(Phaser) {
    if (body.velocity.x === 0 && body.velocity.y === 0) {
         if (this.lastDirections === 'front') {
           this.player.anims.play('idle', true);
+        }
+        if (this.lastDirections === 'back') {
+          this.player.anims.play('idle3', true)
         } 
         if (this.lastDirections === 'side') {
           this.player.anims.play('idle2', true)
