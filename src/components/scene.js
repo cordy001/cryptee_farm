@@ -76,8 +76,7 @@ export default function createScene(Phaser) {
         .setCollideWorldBounds(true);
 
       // shrink the arcade‐body to be narrower/taller
-      this.player.body.setSize(16, 16);
-      // this.player.body.setOffset(0, 0);
+      this.player.body.setSize(16, 24);
 
       // **colliders for both layers**
       this.physics.add.collider(this.player, treeLayer);
@@ -151,11 +150,13 @@ export default function createScene(Phaser) {
         body.setVelocityY(-this.speed);
         this.player.anims.play('walk_back', true);
         this.lastDirections = 'back';
+        this.player.flipX = true;
       }
       else if (this.cursors.down.isDown) {
         body.setVelocityY(this.speed);
         this.player.anims.play('walk_front', true);
         this.lastDirections = 'front';
+        this.player.flipX = false;
       }
 
       // normalize diagonal speed
