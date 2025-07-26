@@ -19,7 +19,7 @@ export default function Home() {
       const config = {
         type: Phaser.AUTO,
         parent: gameRef.current,
-        backgroundColor: "#fff",
+        backgroundColor: "#000",
         scene: Scene,
         pixelArt: true,
         width: window.innerWidth,               // ← full window width

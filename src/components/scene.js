@@ -4,10 +4,11 @@ export default function createScene(Phaser) {
     
     constructor() {
       super({ key: "MainScene" });
+      this.lastDirections = 'front';
     }
     
     preload() {
-      this.load.spritesheet("player_walk", "/Character/char_1/walk_ch1.png", {
+      this.load.spritesheet("player_walk", "/Character/char_1/walk2_ch1.png", {
         frameWidth: 32,
         frameHeight: 32
       });
@@ -29,6 +30,7 @@ export default function createScene(Phaser) {
       });
       this.load.tilemapTiledJSON('map', '/Map/map.json');
       this.load.image('tiles', '/Map/tilemap_packed.png');
+      this.load.image('tiles2', '/Map/tile_soils.png');
     }
     
     create() {
@@ -43,7 +45,12 @@ export default function createScene(Phaser) {
       // 1) Build the map & layers
       const map = this.make.tilemap({ key: 'map' });
       const tileset = map.addTilesetImage('Cryptee Farm', 'tiles');
-      map.createLayer('ground', tileset, 0, 0);
+      const tile2set = map.addTilesetImage('soils', 'tiles2')
+      map.createLayer('ground', [tileset, tile2set], 0, 0);
+
+      // Object tiles
+      const objectsLayer = map.createLayer('objects', [tileset, tile2set], 0, 0)
+      .setCollisionByExclusion([-1]);
 
       // Create the Tree layer and enable tile collision by property
       const treeLayer  = map.createLayer('Tree',  tileset, 0, 0)
@@ -53,19 +60,26 @@ export default function createScene(Phaser) {
       const fenceLayer = map.createLayer('fence', tileset, 0, 0)
       .setCollisionByExclusion([-1]);
 
+      // House 
+
+      const houseTiles = map.createLayer('house', tileset, 0, 0)
+      .setCollisionByExclusion([-1]);
+
       // 2) Create the player as a physics sprite
-      this.player = this.physics.add.sprite(100,300,'player_idle')
+      this.player = this.physics.add.sprite(152, 165, 'player_idle')
         .setOrigin(0.5)
+        .setDisplaySize(16, 16)
         .setCollideWorldBounds(true);
 
       // shrink the arcade‐body to be narrower/taller
       this.player.body.setSize(16, 28);
-      // re‐center it in the sprite
-      this.player.body.setOffset((32-16)/2, (32-28));
+      // this.player.body.setOffset(0, 0);
 
       // **colliders for both layers**
       this.physics.add.collider(this.player, treeLayer);
       this.physics.add.collider(this.player, fenceLayer);
+      this.physics.add.collider(this.player, objectsLayer);
+      this.physics.add.collider(this.player, houseTiles);
 
       this.anims.create({
         key: "walk_front",
@@ -99,12 +113,12 @@ export default function createScene(Phaser) {
       // 4) Camera
       this.cameras.main
         .startFollow(this.player)
-        .setZoom(4)
+        .setZoom(8)
         .setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
       // 5) Input & speed
       this.cursors = this.input.keyboard.createCursorKeys();
-      this.speed = 200;
+      this.speed = 100;
     }
     update() {
       const body = this.player.body;
@@ -114,27 +128,37 @@ export default function createScene(Phaser) {
         body.setVelocityX(-this.speed);
         this.player.anims.play('walk', true);
         this.player.flipX = true;
+        this.lastDirections = 'side';
       }
       else if (this.cursors.right.isDown) {
         body.setVelocityX(this.speed);
         this.player.anims.play('walk', true);
         this.player.flipX = false;
+        this.lastDirections = 'side';
       }
       else if (this.cursors.up.isDown) {
         body.setVelocityY(-this.speed);
         this.player.anims.play('walk_back', true);
+        this.lastDirections = 'front';
       }
       else if (this.cursors.down.isDown) {
         body.setVelocityY(this.speed);
         this.player.anims.play('walk_front', true);
+        this.lastDirections = 'front';
       }
 
       // normalize diagonal speed
       body.velocity.normalize().scale(this.speed);
-
-      if (body.velocity.x === 0 && body.velocity.y === 0) {
-        this.player.anims.play('idle', true);
+   if (body.velocity.x === 0 && body.velocity.y === 0) {
+        if (this.lastDirections === 'front') {
+          this.player.anims.play('idle', true);
+        } 
+        if (this.lastDirections === 'side') {
+          this.player.anims.play('idle2', true)
+        }
+        
       }
     } 
+   
   };
 }
