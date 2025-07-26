@@ -72,7 +72,7 @@ export default function createScene(Phaser) {
         .setCollideWorldBounds(true);
 
       // shrink the arcade‐body to be narrower/taller
-      this.player.body.setSize(16, 28);
+      this.player.body.setSize(16, 16);
       // this.player.body.setOffset(0, 0);
 
       // **colliders for both layers**
@@ -118,7 +118,7 @@ export default function createScene(Phaser) {
 
       // 5) Input & speed
       this.cursors = this.input.keyboard.createCursorKeys();
-      this.speed = 100;
+      this.speed = 50;
     }
     update() {
       const body = this.player.body;
