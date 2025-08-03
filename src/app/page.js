@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import createScene from "@/components/scene";
+import createScene from "@/interface/scene";
 
 export default function Home() {
   const gameRef = useRef(null);
