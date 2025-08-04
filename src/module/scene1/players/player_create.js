@@ -44,12 +44,13 @@ export default function PlayerCreate(scene) {
       })
 
       // 2) Create the player as a physics sprite
-      scene.player = scene.physics.add.sprite(152, 165, 'player_idle')
-        .setOrigin(0.5)
-        .setDisplaySize(16, 16)
+      scene.player = scene.physics.add.sprite(144, 160, 'player_idle')
+        .setOrigin(0, 0) // top-left origin simplifies everything
+        .setDisplaySize(16, 16) // scale to 16x16 pixels
         .setCollideWorldBounds(true);
-      // shrink the arcade‐body to be narrower/taller
-      scene.player.body.setSize(16, 24);
 
-      scene.player.setDepth(10);
+      // Collider setup — must be done on the body
+      scene.player.body.setSize(4, 2, true);    // collider: full width, short height
+      scene.player.setDepth(scene.player.y);
+      scene.player.setCollideWorldBounds(true);
 }

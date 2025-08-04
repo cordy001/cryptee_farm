@@ -23,4 +23,5 @@ export default function PlayerPreload(scene) {
         frameWidth: 32,
         frameHeight: 32
     });
+    
 }
