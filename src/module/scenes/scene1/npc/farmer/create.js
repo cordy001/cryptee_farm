@@ -1,7 +1,7 @@
 export default function FarmerCreate(scene) {
     scene.anims.create({
         key: "farmer_npc_idle",
-        frames: scene.anims.generateFrameNumbers("farmer", { start: 0, end: 4 }),
+        frames: scene.anims.generateFrameNumbers("farmer", { start: 0, end: 3 }),
         frameRate: 10,
         repeat: -1 // Loop forever
     });
