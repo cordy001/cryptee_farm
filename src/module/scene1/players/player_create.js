@@ -9,7 +9,7 @@ export default function PlayerCreate(scene) {
       {key: "idle3", prefix: "player_idle3", end: 3}
     ];
 
-    for (const {key, prefix, end } of anims) {
+    for (const { key, prefix, end } of anims) {
         // 1) Load the sprite sheet for the player animations
         if (!scene.anims.exists(key)) {
           scene.anims.create({
@@ -27,7 +27,7 @@ export default function PlayerCreate(scene) {
       .setCollideWorldBounds(true);
 
     // Collider setup — must be done on the body
-    scene.player.body.setSize(4, 2, true);    // collider: full width, short height
+    scene.player.body.setSize(16, 2, true);    // collider: full width, short height
     scene.player.setDepth(scene.player.y);
     scene.player.setCollideWorldBounds(true);
 }
