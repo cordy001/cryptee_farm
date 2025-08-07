@@ -1,4 +1,4 @@
-import PlayerUpdate from "./players/player_update";
+import PlayerUpdate from "./players/player_001/player_update";
 
 export default function Update(scene) {
     // Update the player movement and animations

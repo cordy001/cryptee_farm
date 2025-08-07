@@ -1,5 +1,5 @@
-import MapCreate from "./map/map_create";
-import PlayerCreate from "./players/player_create";
+import MapCreate from "./map/map_1/map";
+import PlayerCreate from "./players/player_001/player_create";
 import FarmerCreate  from "./npc/farmer/create";
 import OwlCreate from "./npc/owl/create";
 import SellerCreate from "./npc/seller/create";
