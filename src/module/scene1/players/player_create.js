@@ -15,7 +15,7 @@ export default function PlayerCreate(scene) {
           scene.anims.create({
             key: key,
             frames: scene.anims.generateFrameNumbers(prefix, { start: 0, end: end }),
-            frameRate: 10,
+            frameRate: 12,
             repeat: -1 // Loop forever
           })
         }
