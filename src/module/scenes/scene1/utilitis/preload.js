@@ -9,4 +9,6 @@ export default function UtilitisPreload(scene) {
         scene.load.image(name, path);
     }
 
+    scene.load.json("keybinds", "Config/keybinds/keybind.json")
+
 }

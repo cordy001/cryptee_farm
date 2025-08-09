@@ -36,4 +36,15 @@ export default function Inventory(scene) {
     
     // Update position when window resizes
     scene.scale.on('resize', positionBag);
+
+    function destroy() {
+        scene.scale.off('resize', positionBag);
+        if (scene.bagIcon) {
+            scene.bagIcon.destroy();
+            scene.bagIcon = null;
+        }
+    }
+
+    scene.events.once('shutdown', destroy);
+    scene.events.once('destroy', destroy);
 }
