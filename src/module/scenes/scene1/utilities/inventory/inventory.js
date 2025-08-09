@@ -1,7 +1,11 @@
-import DafaultCamera from '@/module/scenes/scene1/utilitis/camera/camera';
+import DafaultCamera from '@/module/scenes/scene1/utilities/camera/camera';
 import ControllerInventory from '@/module/controller/Inventory/inventory';
+import { useSceneCleanup } from '@/key_cleaners/destroy_keybinds';
 
 export default function Inventory(scene) {
+    const cleanup = useSceneCleanup(scene);
+
+
     // Function to position the bag based on current camera dimensions
     function positionBag() {
         // First get the camera from the scene
@@ -28,6 +32,8 @@ export default function Inventory(scene) {
 
             ControllerInventory(scene);
 
+            cleanup.add(() => { scene.bagIcon.destroy(); scene.bagIcon = null; });
+
         }
     }
     
@@ -35,16 +41,7 @@ export default function Inventory(scene) {
     positionBag();
     
     // Update position when window resizes
-    scene.scale.on('resize', positionBag);
+    cleanup.onResize(positionBag);
 
-    function destroy() {
-        scene.scale.off('resize', positionBag);
-        if (scene.bagIcon) {
-            scene.bagIcon.destroy();
-            scene.bagIcon = null;
-        }
-    }
 
-    scene.events.once('shutdown', destroy);
-    scene.events.once('destroy', destroy);
 }

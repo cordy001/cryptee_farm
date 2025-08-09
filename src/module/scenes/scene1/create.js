@@ -3,7 +3,7 @@ import PlayerCreate from "./players/player_001/player_create";
 import FarmerCreate  from "./npc/farmer/create";
 import OwlCreate from "./npc/owl/create";
 import SellerCreate from "./npc/seller/create";
-import Inventory from "./utilitis/inventory/inventory";
+import Inventory from "./utilities/inventory/inventory";
 
 export default function Create(scene) {
     PlayerCreate(scene); // Player
