@@ -4,12 +4,14 @@ import FarmerCreate  from "./npc/farmer/create";
 import OwlCreate from "./npc/owl/create";
 import SellerCreate from "./npc/seller/create";
 import Inventory from "./utilities/inventory/inventory";
+import InventoryElements from "./utilities/inventory/inventoryElements";
 
 export default function Create(scene) {
     PlayerCreate(scene); // Player
     FarmerCreate(scene); // NPC Farmers
     OwlCreate(scene); // NPC Owl
     Inventory(scene); // Inventory
+    InventoryElements(scene); // Inventory Elements
     SellerCreate(scene); // NPC Seller
     MapCreate(scene); // Maps
 }

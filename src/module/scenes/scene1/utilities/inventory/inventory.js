@@ -1,4 +1,4 @@
-import DafaultCamera from '@/module/scenes/scene1/utilities/camera/camera';
+import DafaultCamera from '@/module/scenes/scene1/utilities/camera/InventoryCam/cameraInventory';
 import ControllerInventory from '@/module/controller/Inventory/inventory';
 import { useSceneCleanup } from '@/key_cleaners/destroy_keybinds';
 
@@ -42,6 +42,5 @@ export default function Inventory(scene) {
     
     // Update position when window resizes
     cleanup.onResize(positionBag);
-
-
+    
 }
