@@ -5,41 +5,43 @@ export default function MapCreate (scene) {
     const tile2set = map.addTilesetImage('soils', 'tiles2')
     map.createLayer('ground', [tileset, tile2set], 0, 0);
 
-    // Object tiles
-    const objectsLayer = map.createLayer('objects', [tileset, tile2set], 0, 0)
-    .setCollisionByExclusion([-1]);
+    // Create layers and keep references
+    const createdLayers = {};
+    const layerDefs = [
+      { key: 'objects', tiles: [tileset, tile2set] },
+      { key: 'soils', tiles: tile2set },
+      { key: 'Tree', tiles: tileset },
+      { key: 'Colliders', tiles: tileset },
+      { key: 'fence', tiles: tileset },
+      { key: 'house', tiles: tileset },
+      { key: 'invisible', tiles: tileset },
+    ];
 
-    // Soils layer
-    const soilsLayer = map.createLayer('soils', tile2set, 0, 0)
-    .setCollisionByExclusion([-1]);
+    for (const { key, tiles } of layerDefs) {
+      createdLayers[key] = map.createLayer(key, tiles, 0, 0).setCollisionByExclusion([-1]);
+    }
 
-    // Create the Tree layer and enable tile collision by property
-    const treeLayers  = map.createLayer('Tree',  tileset, 0, 0)
-    .setCollisionByExclusion([-1]);
+    // Expose variables used later
+    const objectsLayer   = createdLayers.objects;
+    const soilsLayer     = createdLayers.soils;
+    const treeLayers     = createdLayers.Tree;
+    const collidersLayer = createdLayers.Colliders;
+    const fenceLayer     = createdLayers.fence;
+    const houseTiles     = createdLayers.house;
+    const invisibleLayer = createdLayers.invisible;
 
-    const collidersLayer = map.createLayer('Colliders', tileset, 0, 0)
-    .setCollisionByExclusion([-1]);
-
-    // new fence layer
-    const fenceLayer = map.createLayer('fence', tileset, 0, 0)
-    .setCollisionByExclusion([-1]);
-
-    // House layer
-    const houseTiles = map.createLayer('house', tileset, 0, 0)
-    .setCollisionByExclusion([-1]);
-
-    // Invisible layer
-    const invisibleLayer = map.createLayer('invisible', tileset, 0, 0)
-    .setCollisionByExclusion([-1]);
-
-    // **colliders for both layers**
-    scene.physics.add.collider(scene.player, treeLayers);
-    scene.physics.add.collider(scene.player, collidersLayer);
-    scene.physics.add.collider(scene.player, fenceLayer);
-    scene.physics.add.collider(scene.player, objectsLayer);
-    scene.physics.add.collider(scene.player, houseTiles);
+    // Keep handles to colliders (use these as your "IDs")
+    
+    scene.physics.add.collider(scene.player, treeLayers)
+    scene.physics.add.collider(scene.player, collidersLayer)
+    scene.physics.add.collider(scene.player, fenceLayer)
+    scene.physics.add.collider(scene.player, objectsLayer)
+    scene.physics.add.collider(scene.player, houseTiles)
     scene.physics.add.collider(scene.player, invisibleLayer)
-    scene.physics.add.collider(scene.player, scene.npc);
+    scene.physics.add.collider(scene.player, scene.npc)
+
+
+
     // Set the depth of the layers
 
     let depth = 0;
