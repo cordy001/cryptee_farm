@@ -1,11 +1,6 @@
-import DafaultCamera from '@/module/scenes/scene1/utilities/camera/InventoryCam/cameraInventory';
+import DafaultCamera from '@/module/scenes/scene1/utilities/camera/InventoryCam/plants';
 import ControllerInventory from '@/module/controller/Inventory/inventory';
-import InventoryElements from '@/module/scenes/scene1/utilities/inventory/inventoryElements';
-import Plants from '@/module/scenes/scene1/utilities/inventory/plants';
-
-
 import { useSceneCleanup } from '@/key_cleaners/destroy_keybinds';
-
 
 export default function Inventory(scene) {
     const cleanup = useSceneCleanup(scene);
@@ -28,7 +23,7 @@ export default function Inventory(scene) {
             scene.bagIcon.setPosition(x, y)
                          .setDisplaySize(scaledSize, scaledSize);
         } else {
-            scene.bagIcon = scene.add.image(x, y, 'bag2')
+            scene.bagIcon = scene.add.image(x, y, 'CherryBranch')
                 .setScrollFactor(0)
                 .setOrigin(1, 1)
                 .setInteractive({ useHandCursor: true })
@@ -36,10 +31,6 @@ export default function Inventory(scene) {
                 .setDisplaySize(scaledSize, scaledSize);
 
             ControllerInventory(scene);
-
-            InventoryElements(scene);
-
-            //Plants(scene);
 
             cleanup.add(() => { scene.bagIcon.destroy(); scene.bagIcon = null; });
 
